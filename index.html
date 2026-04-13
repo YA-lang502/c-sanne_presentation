@@ -11,14 +11,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet"/>
 
 <style>
-
+/* ****************************
+   ATTENZIONE: NON TOCCARE pls
+   Ho fatto funzionare tutto.
+   **************************** */
 
 :root{
   --bg:#0f1226; --muted:#a6add3; --text:#e9ecff; --accent1:#6a11cb; --accent2:#ff7a18; --accent3:#22d3ee;
   --glass:rgba(255,255,255,.06); --shadow:0 10px 30px rgba(0,0,0,.35); --radius:22px;
 }
 
-
+/* reset (tipo) */
 *{box-sizing:border-box}
 html, body { margin:0; padding:0; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; scroll-behavior:smooth; background:
  radial-gradient(1200px 800px at 10% -10%, #1a1e44 0%, #0f1226 45%, #0a0d1f 100%);
@@ -27,7 +30,7 @@ html, body { margin:0; padding:0; font-family:Poppins, system-ui, -apple-system,
 a{ text-decoration:none; color:inherit }
 img{ max-width:100%; display:block }
 
-
+/* boh, tema hero */
 .hero{
   position:relative; overflow:hidden; isolation:isolate;
   padding:72px 24px 24px;
@@ -91,7 +94,7 @@ img{ max-width:100%; display:block }
 .card ul{ padding-left:18px; margin:10px 0; color:var(--muted); line-height:1.6 }
 .center{ grid-column:span 12 }
 
-
+/* gallery */
 .gallery{ display:grid; grid-template-columns:repeat(12,1fr); gap:16px; margin-top:6px }
 .work{
   grid-column:span 3; min-height:220px; border-radius:18px; position:relative; overflow:hidden; cursor:zoom-in;
@@ -120,7 +123,7 @@ img{ max-width:100%; display:block }
 .kv .k{ color:#cfd4ff; font-weight:700 }
 .kv .v{ color:var(--muted) }
 
-
+/* atelier */
 .atelier{ display:grid; grid-template-columns:repeat(12,1fr); gap:18px; align-items:start }
 .atelier .shot{
   grid-column:span 5; border-radius:18px; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:var(--shadow); cursor:zoom-in
@@ -128,7 +131,7 @@ img{ max-width:100%; display:block }
 .atelier .shot img{ width:100%; height:auto; display:block }
 .atelier .text{ grid-column:span 7 }
 
-
+/* zoom modal */
 .zoom{ position:fixed; inset:0; display:none; place-items:center; background:rgba(3,5,14,.6); z-index:60; padding:20px }
 .zoom.show{ display:grid }
 .zoom-box{
@@ -140,16 +143,16 @@ img{ max-width:100%; display:block }
 .zoom-cap{ padding:10px 14px; font-size:.9rem; color:#eaeaff; border-top:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.25) }
 .close{ position:absolute; top:10px; right:10px; background:rgba(0,0,0,.5); color:#fff; font-weight:800; border:0; padding:6px 10px; border-radius:10px; cursor:pointer }
 
-
+/* reveal (animazione semplice) */
 .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease }
 .reveal.show{ opacity:1; transform:none }
 
-
+/* footer */
 .footer{ border-top:1px solid rgba(255,255,255,.08); padding:26px 24px; color:#bac1eea8 }
 .footer-inner{ max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px }
 .credit{ opacity:.9 }
 
-
+/* media */
 @media (max-width: 960px){
   .hero-inner{ grid-template-columns:1fr }
   .card{ grid-column:span 12 }
@@ -163,8 +166,8 @@ img{ max-width:100%; display:block }
   .work{ grid-column:span 12 }
 }
 
-
-.card.unused, .not-real{ display:block;  }
+/* roba in più (forse inutile, ma la lascio) */
+.card.unused, .not-real{ display:block; /* tanto non c'è nel DOM */ }
 .hero .maybe{ color: #fff; } 
 </style>
 </head>
@@ -370,6 +373,7 @@ img{ max-width:100%; display:block }
   </div>
 </footer>
 
+<!-- Sezione ringraziamento + voto -->
 <section class="section" id="grazie" style="text-align:center">
   <h2 class="reveal">Grazie per l'attenzione </h2>
   <p class="reveal"></p>
@@ -383,7 +387,7 @@ img{ max-width:100%; display:block }
   <div id="voteMsg" style="margin-top:10px;color:var(--muted)"></div>
 </section>
 
-
+<!-- GIF overlay (mostrata solo per voto 10) -->
 <div id="gifOverlay" style="display:none;position:fixed;inset:0;backdrop-filter:blur(4px);background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center">
   <div style="position:relative;max-width:90vw;max-height:90vh">
     <button id="gifClose" aria-label="Chiudi GIF" style="position:absolute;top:-18px;right:-18px;background:#fff;border-radius:50%;border:0;width:36px;height:36px;cursor:pointer;font-weight:700">✕</button>
@@ -391,7 +395,7 @@ img{ max-width:100%; display:block }
   </div>
 </div>
 
-
+<!-- ZOOM MODAL -->
 <div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-labelledby="zoomCap" aria-hidden="true">
   <div class="zoom-box" tabindex="-1">
     <button class="close" aria-label="Chiudi" id="zoomClose">✕</button>
@@ -401,8 +405,9 @@ img{ max-width:100%; display:block }
 </div>
 
 <script>
-
-var observerOptions = { threshold: .15 }; 
+// ok allora: animazione reveal
+// (uso IntersectionObserver, speriamo giri anche su vecchi browser…)
+var observerOptions = { threshold: .15 }; // magia
 let obv = new IntersectionObserver(function(entries){
   entries.forEach(function(e){
     if (e.isIntersecting) {
@@ -413,7 +418,7 @@ let obv = new IntersectionObserver(function(entries){
 
 document.querySelectorAll('.reveal').forEach(function(el){ obv.observe(el) })
 
-
+// tilt 3D (tipo carta che si muove)
 function tiltify(el){ 
   var r = 10, s = 1.02, leaveTO=null
   el.addEventListener('mousemove', function(e){
@@ -449,7 +454,7 @@ function openZoom(src, title, meta){
   zoomCap.textContent = (title? title+' — ' : '') + (meta || '')
   zoom.setAttribute('aria-hidden','false')
   zoom.classList.add('show')
-
+  // sposto il focus sul bottone di chiusura per accessibilità
   try{ zoomClose.focus() }catch(e){}
 }
 function closeZoom(){
@@ -460,7 +465,7 @@ function closeZoom(){
   _prevFocus = null
 }
 
-
+// lazy-load e fallback per immagini non trovate
 document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('img').forEach(function(img){
     try{ img.loading = 'lazy' }catch(e){}
@@ -483,7 +488,7 @@ zoom.addEventListener('click', function(e){ if(e.target===zoom) closeZoom() })
 zoomClose.addEventListener('click', closeZoom)
 document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeZoom() } })
 
-
+// Voto: gestione form semplice + GIF per valore 10
 var voteBtn = document.getElementById('voteBtn')
 var voteBox = document.getElementById('voteBox')
 var voteSubmit = document.getElementById('voteSubmit')
@@ -503,27 +508,27 @@ if (voteSubmit) {
   voteSubmit.addEventListener('click', function(){
     var v = voteInput ? Number(voteInput.value) : NaN
     if (isNaN(v) || v < 0 || v > 10) {
-      voteMsg.textContent = 'il numero deve essere tra 9 e 10'
+      voteMsg.textContent = 'Inserisci un numero valido tra 0 e 10.'
       return
     }
     if (!Number.isInteger(v)) {
-      voteMsg.textContent = 'metti solo numeri interi.' 
+      voteMsg.textContent = 'Inserisci solo numeri interi (es. 7).' 
       return
     }
-    
+    // caso voto basso: mostra GIF alternativo
     if (v >= 0 && v <= 6) {
       if (gifOverlay) gifOverlay.style.display = 'flex'
-     
+      // GIF fornito dall'utente per voti 0-6
       try{ gifImg.src = 'https://i.makeagif.com/media/3-09-2017/sbfN-4.gif' }catch(e){}
       voteMsg.textContent = ''
       try{ gifClose.focus() }catch(e){}
       return
     }
-
+    // voto 7 o 8: mostra GIF fornito dall'utente (cristiano-ronaldo-almost)
     if (v === 7 || v === 8) {
       if (gifOverlay) gifOverlay.style.display = 'flex'
       try{ gifImg.src = 'https://media1.tenor.com/m/jm1ZYSUCnYkAAAAC/cristiano-ronaldo-almost.gif' }catch(e){}
-      voteMsg.textContent = (v === 7) ? 
+      voteMsg.textContent = (v === 7) ? 'Quasi!' : 'Ottimo!'
       try{ gifClose.focus() }catch(e){}
       return
     }
@@ -532,14 +537,14 @@ if (voteSubmit) {
     if (v === 9) {
       if (gifOverlay) gifOverlay.style.display = 'flex'
       try{ gifImg.src = 'https://media1.tenor.com/m/E9k_XmHkbTYAAAAC/almost-there.gif' }catch(e){}
-      voteMsg.textContent = 
+      voteMsg.textContent = 'Quasi lì!'
       try{ gifClose.focus() }catch(e){}
       return
     }
-   
+    // voto massimo: mostra pool di GIF Ronaldo (prova sequenziale)
     if (v === 10) {
       if (gifOverlay) gifOverlay.style.display = 'flex'
-      
+      // carica la pool di GIF di Ronaldo
       var ronaldoCandidates = [
         'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExemdoeXA0c2RvdjZvYzl3MmhmNXByOGpneHM4MHhwdXZlanBrZmhzMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/R312C3MEVg4SCYAber/giphy.gif',
         'https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif',
@@ -551,7 +556,7 @@ if (voteSubmit) {
       try{ gifClose.focus() }catch(e){}
       return
     }
-    voteMsg.textContent = 
+    voteMsg.textContent = 'Grazie per il voto: ' + v
   })
 }
 
@@ -562,7 +567,7 @@ if (gifOverlay) {
   gifOverlay.addEventListener('click', function(e){ if (e.target === gifOverlay) gifOverlay.style.display = 'none' })
 }
 
-
+// fallback se il GIF non si carica: mostrare un SVG animato locale con testo "suiiiiiii"
 var gifImg = document.getElementById('gifImg')
 if (gifImg) {
   gifImg.addEventListener('error', function(){
@@ -576,13 +581,13 @@ if (gifImg) {
   })
 }
 
-
+// funzione riutilizzabile: tenta sequenzialmente di caricare GIF da una lista
 function loadGifPool(candidates){
   if (!gifImg) return
   var i = 0
   function tryOne(){
     if (i >= candidates.length) {
-     
+      // nessun GIF valido, attiva fallback tramite evento error
       gifImg.src = 'invalid://no-gif'
       return
     }
